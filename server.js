@@ -120,6 +120,48 @@ app.get('/api/posts',async(req,res)=>{
   
 })
 
+app.get("/api/posts/:id", async(req,res)=>{
+  try{
+    const post = await POST.findById(req.params.id)
+    if(post){
+      res.status(200).json(post)
+    }else{
+      res.status(404).json({message : `post with ${req.params.id} id not found`})
+    }
+  }catch(error){
+    res.status(500).json({message : "error fetching post"})
+  }
+} )
+
+app.put("/api/posts/:id", async(req,res)=>{
+  try{
+    const updatePost = await POST.findByIdAndUpdate(req.params.id,req.body,{
+      new :true,
+    })
+    if(updatePost){
+      res.status(200).json(updatePost)
+    }else{
+      res.status(404).json({message : `post with ${req.params.id} id not found`})
+    }
+  }catch(error){
+    res.status(500).json({message : "error updating post",error})
+  }
+} )
+
+app.delete("/api/posts/:id",async(req,res)=>{
+  const deletePost =  await POST.findByIdAndDelete(req.params.id)
+  try{
+  if(deletePost){
+    res.status(200).json(deletePost)
+  }else{
+    res.status(404).json({message : `post with ${req.params.id} if not found`})
+  } }
+catch(error){
+res.status(500).json({message : "error delete post",error})
+}
+  
+})
+
 
 // Start the server
 const PORT = process.env.PORT || 3000;
